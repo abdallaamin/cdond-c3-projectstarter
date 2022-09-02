@@ -13,19 +13,19 @@ commands:
     steps:
       - run:
           name: Remove files from S3 bucket
-          # when: on_fail
-          # command: |
-          #   aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+          when: on_fail
+          command: |
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - run:
           name: Destroy environments
-          # when: on_fail
-          # command: |
-          #   aws cloudformation delete-stack --stack-name <<parameters.frontendstack>>
-          #   aws cloudformation delete-stack --stack-name <<parameters.backendstack>>
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name <<parameters.frontendstack>>
+            aws cloudformation delete-stack --stack-name <<parameters.backendstack>>
 
-  revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.  
-    steps:
+  # revert-migrations:
+  #   description: Revert the last migration if successfully run in the current workflow.  
+  #   steps:
       # - restore_cache:
       #     keys: [backend-build]
       # - run:
