@@ -334,7 +334,7 @@ workflows:
 
   deploy_and_notifyslack:
     jobs:
-      - deploy:
+      - notifyslack:
           context: slack
 
       # - deploy-infrastructure:
