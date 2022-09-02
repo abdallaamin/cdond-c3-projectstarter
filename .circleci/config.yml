@@ -13,33 +13,33 @@ commands:
     steps:
       - run:
           name: Remove files from S3 bucket
-          when: on_fail
-          command: |
-            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+          # when: on_fail
+          # command: |
+          #   aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - run:
           name: Destroy environments
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name <<parameters.frontendstack>>
-            aws cloudformation delete-stack --stack-name <<parameters.backendstack>>
+          # when: on_fail
+          # command: |
+          #   aws cloudformation delete-stack --stack-name <<parameters.frontendstack>>
+          #   aws cloudformation delete-stack --stack-name <<parameters.backendstack>>
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.  
     steps:
-      - restore_cache:
-          keys: [backend-build]
-      - run:
-          name: Revert migrations
-          when: on_fail
-          command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure https://kvdb.io/C4ve2PxG7CKCh6kkAZtrNQ/migration_$\{CIRCLE_WORKFLOW_ID:0:7\})
-            if [[ $SUCCESS == 1 ]]; 
-            then
-              cd ~/project/backend
-              npm install
-              npm run migrations:revert
-            fi
+      # - restore_cache:
+      #     keys: [backend-build]
+      # - run:
+      #     name: Revert migrations
+      #     when: on_fail
+      #     command: |
+      #       # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+      #       SUCCESS=$(curl --insecure https://kvdb.io/C4ve2PxG7CKCh6kkAZtrNQ/migration_$\{CIRCLE_WORKFLOW_ID:0:7\})
+      #       if [[ $SUCCESS == 1 ]]; 
+      #       then
+      #         cd ~/project/backend
+      #         npm install
+      #         npm run migrations:revert
+      #       fi
             
 jobs:
   build-frontend:
@@ -76,32 +76,32 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
-  test-frontend:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [frontend-build]
-      - run:
-          name: front-end test
-          command : |
-            cd frontend
-            npm install
-            npm run test
-  test-backend:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend-build]
-      - run:
-          name: Back-end test
-          command : |
-            cd backend
-            npm install
-            npm run test
+  # test-frontend:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [frontend-build]
+  #     - run:
+  #         name: front-end test
+  #         command : |
+  #           cd frontend
+  #           npm install
+  #           npm run test
+  # test-backend:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [backend-build]
+  #     - run:
+  #         name: Back-end test
+  #         command : |
+  #           cd backend
+  #           npm install
+  #           npm run test
 
 #   scan-frontend:
 #     docker:
@@ -290,10 +290,10 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
       # - scan-backend:
       #     requires: [build-backend]
       # - scan-frontend:
