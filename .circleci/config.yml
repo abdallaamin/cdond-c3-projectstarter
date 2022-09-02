@@ -1,7 +1,6 @@
 version: 2.1
 
 orbs:
-  node: 'circleci/node:4.1'
   slack: circleci/slack@4.1
 
 commands:
@@ -337,7 +336,7 @@ workflows:
     jobs:
       - deploy:
           context: slack
-          
+
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
