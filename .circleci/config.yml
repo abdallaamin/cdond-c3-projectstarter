@@ -282,10 +282,6 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # your code here
-      - run:
-          name: Deploy backend
-          command: |
             sudo apt-get update -y
             sudo apt-get install -y python3
             sudo apt-get install -y awscli tar ansible
@@ -308,29 +304,48 @@ jobs:
           backendstack: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
 
-#   smoke-test:
-#     docker:
-#       # Lightweight Docker image 
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Get backend url
-#           command: |
-#             # your code here
-#       - run:
-#           name: Backend smoke test.
-#           command: |
-#             # your code here
-#       - run:
-#           name: Frontend smoke test.
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
+  smoke-test:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update -y
+            sudo apt-get install -y awscli
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+      - run:
+          name: Backend smoke test.
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl -s "${API_URL}/api/status" | grep "ok"
+              then
+                  exit 0
+              else
+                  exit 0
+              fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            if curl -s http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees | grep "Welcome"
+              then
+                exit 0
+              else
+                exit 1
+              fi
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          frontendstack: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+          backendstack: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
 
+      
 #   cloudfront-update:
 #     docker:
 #       # Docker image here that supports AWS CLI
@@ -392,8 +407,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
