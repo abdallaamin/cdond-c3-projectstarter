@@ -224,13 +224,13 @@ jobs:
           command: |
               if grep "has been executed successfully." ~/migrations_dump.txt
               then
-                curl --insecure https://kvdb.io/C4ve2PxG7CKCh6kkAZtrNQ/migration_1  -d '1'
+                curl --insecure https://kvdb.io/4uxRfw5trbcrcsgvdZJbki/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
               fi
     # Here's where you will add some code to rollback on failure      
-      # - destroy-environment:
-      #     frontendstack: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
-      #     backendstack: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-      # - revert-migrations
+      - destroy-environment:
+          frontendstack: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+          backendstack: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
 
 #   deploy-frontend:
 #     docker:
