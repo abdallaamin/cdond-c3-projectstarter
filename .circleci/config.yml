@@ -187,10 +187,6 @@ jobs:
           command: |
             pip install pip --upgrade
             pip install ansible awscli
-            # apk add --update ansible
-            # apk add --update aws-cli
-            # apk add --update tar
-            # apk add --update gzip
       - run:
           name: Configure server
           command: |
@@ -226,7 +222,7 @@ jobs:
               then
               curl https://kvdb.io/4uxRfw5trbcrcsgvdZJbki/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
               fi
-    # Here's where you will add some code to rollback on failure      
+    # Here's where you will add some code to rollback on failures     
       - destroy-environment:
           frontendstack: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
           backendstack: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
