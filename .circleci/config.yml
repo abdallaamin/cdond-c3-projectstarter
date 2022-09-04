@@ -222,7 +222,7 @@ jobs:
       #         then
       #         curl https://kvdb.io/4uxRfw5trbcrcsgvdZJbki/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
       #         fi
-    # Here's where you will add some code to rollback on failures     
+    # Here's where you will add some code to rollback onn failures     
       - destroy-environment:
           frontendstack: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
           backendstack: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
@@ -345,7 +345,7 @@ jobs:
           backendstack: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
 
-      
+
 #   cloudfront-update:
 #     docker:
 #       # Docker image here that supports AWS CLI
