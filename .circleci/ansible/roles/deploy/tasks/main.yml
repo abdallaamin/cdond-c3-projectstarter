@@ -1,27 +1,28 @@
-- name: "Creates directory"
+---
+- name: "Creates backend app directory"
   file:
-    path: ~/web
+    path: ~/backend-app
     state: directory
 
-- name: "Unarchive zipped backend files"
+- name: "Unarchive backend files"
   unarchive:
     src: artifact.tar.gz
-    dest: ~/web
+    dest: ~/backend-app
 
 - name: "Install node dependencies"
   shell: |
-    cd ~/web
+    cd ~/backend-app
     npm install
 
-- name: "Executing node"
+- name: "Run node using pm2"
   shell: |
-    cd ~/web/dist
+    cd ~/backend-app/dist
     pm2 stop default
     # pm2 start npm -- start
     pm2 start main.js
   register: execute_node
 
-- name: "print execute_node"
+- name:
   debug:
     msg: "{{ execute_node.stdout_lines }}"
 

@@ -1,6 +1,6 @@
 ---
 
-- name: "configuration play" 
+- name: "configuration play." 
   hosts: web
   user: ubuntu
   become: true
@@ -15,37 +15,9 @@
   pre_tasks:
     - name: "wait 600 seconds for target connection to become reachable/usable."
       ansible.builtin.wait_for_connection:
+        timeout: 600
 
-    - name: "update apt packages"
-      become: true
-      apt:
-        update_cache: yes
-    
-    # - name: "upgrade packages"
-    #   become: true
-    #   apt:
-    #     upgrade: yes
-
-    - name: "remove dependencies that are no longer required"
-      become: true
-      apt:
-        autoremove: yes
-
-    - name: "install python for Ansible, nodejs, and npm"
-      become: true
-      apt: 
-        name: ["nodejs","npm","tar"] #,"python3.8"]
-        state: latest
-        update_cache: yes
-
-    - name: "install pm2"
-      become: true
-      npm:
-        name: pm2
-        global: yes
-        production: yes
-        state: present
-
+  # Get the environment variables from CircleCI and add to the EC2 instance
   environment:
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
     - TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
@@ -60,4 +32,5 @@
     - VERSION: "{{ lookup('env', 'VERSION')}}"
 
   roles:
+    - configure-server
     - configure-prometheus-node-exporter
