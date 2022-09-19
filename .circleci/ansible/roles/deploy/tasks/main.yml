@@ -22,7 +22,8 @@
     pm2 start main.js
   register: execute_node
 
-- name:
+
+- name: "print execute_node"
   debug:
     msg: "{{ execute_node.stdout_lines }}"
 
